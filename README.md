@@ -6,12 +6,15 @@ Add prepare/unprepare async hooks to your Mocha test environment.
 You may have multiple test cases to run with mocha, and often times, you would
 come across situations where you need to do a global setup/teardown processes.
 Mocha supports *root level hooks*, but at that point, all of your test files are
-loaded (executed). Imagine, the following scenario:
+loaded, meaning, all of your code outside describe() or other mocha's global
+functions are all executed.
+
+Imagine, the following scenario:
 
 ```js
 // My test case 1
 
-var foo = require('foo');
+var foo = require('foo'); // called even before the root level handler `before`
 
 describe('test', function () {
     it('test 1', function () {
@@ -24,7 +27,20 @@ describe('test', function () {
 The module `foo` provides a method `getStatus()`. But, what if later on, this
 foo module chainged its behavior and required an async initialization before
 the getStatus() method returns a correct value, and you have already
-written hundreds of test cases this way. Modifying all of them to put the
+written hundreds of test cases this way?
+
+```js
+// somewhere, we need to do...
+var foo = require('foo');
+foo.use(require('foo-plugin-a');
+foo.use(require('foo-plugin-b');
+foo.init(function () {
+    // now the module 'foo' is ready to use.
+});
+
+```
+Where can we put the above code? You can put it in your root level `before`
+handler, however, modifying all of your existing test cases  to put the
 initialization routine inside the root level hook is obviously painful.
 
 This module allows you to set `onPrepare` and `onUnprepare` handlers (takes
@@ -86,5 +102,5 @@ used in your handlers to tell the module that onPrepare/onUnprepare
 has been complete and ready to move on.
 
 ## Note
-* 'mocha' is specified as a `peerDepenencies`. Make sure to have mocha in your devDependencies.
+* 'mocha' is specified as its `peerDepenencies`. Make sure to have mocha in your devDependencies.
 
