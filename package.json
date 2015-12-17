@@ -1,0 +1,27 @@
+{
+  "name": "mocha-prepare",
+  "version": "0.0.1",
+  "description": "Add prepare/unprepare async hooks to your Mocha test environment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "istanbul cover _mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enobufs/mocha-prepare.git"
+  },
+  "keywords": [
+    "mocha",
+    "async",
+    "prepare"
+  ],
+  "author": "enobufs",
+  "license": "MIT",
+  "devDependencies": {
+    "istanbul": "^0.4.1",
+    "mocha": "^2.3.4"
+  },
+  "peerDependencies": {
+    "mocha": ">=1.0.0"
+  }
+}

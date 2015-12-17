@@ -1,0 +1,6 @@
+--ui bdd
+--reporter spec
+--timeout 2000
+--globals prepared
+--recursive
+--require test/prepare
