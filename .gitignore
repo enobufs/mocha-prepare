@@ -26,3 +26,4 @@ node_modules
 *.swo
 doc
 luacov.*.out
+result.json

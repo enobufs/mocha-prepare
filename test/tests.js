@@ -5,15 +5,17 @@ var assert = require('assert');
 console.log('test loaded');
 
 function assertPrep() {
-    var complete = global.prepare.complete;
-    var startAt = global.prepare.startAt;
-    var endAt = global.prepare.endAt;
-    assert.ok(complete);
+    var prepared = global.prep.prepared;
+    var startAt = global.prep.startAt;
+    var endAt = global.prep.endAt;
+    var DELAY_MIN = global.prep.DELAY - global.prep.MARGIN;
+    var DELAY_MAX = global.prep.DELAY + global.prep.MARGIN;
+    assert.ok(prepared);
     assert.equal(typeof startAt, 'number');
     assert.equal(typeof endAt, 'number');
     assert.ok(startAt < endAt);
-    assert.ok(endAt - startAt > 900);
-    assert.ok(endAt - startAt < 1100);
+    assert.ok(endAt - startAt > DELAY_MIN);
+    assert.ok(endAt - startAt < DELAY_MAX);
     assert.ok(endAt < Date.now());
 }
 
@@ -28,7 +30,6 @@ after(function () {
 describe('mocha-prepare tests', function () {
     it('should be prepared by now', function () {
         assertPrep();
-        assert(false);
     });
 });
 

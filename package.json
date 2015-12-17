@@ -4,7 +4,8 @@
   "description": "Add prepare/unprepare async hooks to your Mocha test environment.",
   "main": "index.js",
   "scripts": {
-    "test": "istanbul cover _mocha"
+    "test": "istanbul cover _mocha",
+    "posttest": "[ -f \"result.json\" ] && exit 0 || exit 1 # check if unprepared"
   },
   "repository": {
     "type": "git",
