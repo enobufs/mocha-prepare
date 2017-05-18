@@ -15,7 +15,6 @@ function prepare(onPrepare, onUnprepare) {
                 // Pass forward the arugments for possible spec change
                 // in the future.
                 var thisArg = this;
-                console.log('DONE');
                 /* istanbul ignore else */
                 if (typeof onUnprepare === 'function') {
                     // onUnprepare() is supplied. Call it.
