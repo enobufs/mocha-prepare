@@ -1,6 +1,6 @@
 {
   "name": "mocha-prepare",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Add prepare/unprepare async hooks to your Mocha test environment.",
   "main": "index.js",
   "scripts": {
