@@ -66,7 +66,7 @@ Your ./test/mocha.opts should look like this:
 --require test/prepare
 ```
 
-In this example, Mocha will load `./test/propare.js` first. You can implement your
+In this example, Mocha will load `./test/prepare.js` first. You can implement your
 prepare/unprepare handlers in this file.
 
 ### Set prepare/unprepare handlers
