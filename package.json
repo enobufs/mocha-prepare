@@ -20,7 +20,8 @@
   "license": "MIT",
   "devDependencies": {
     "istanbul": "^0.4.1",
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "sinon": "^3.2.0"
   },
   "peerDependencies": {
     "mocha": ">=1.0.0"

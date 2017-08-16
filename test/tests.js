@@ -2,34 +2,110 @@
 
 var assert = require('assert');
 
-console.log('test loaded');
+describe('mocha-prepare unit test', function () {
+    var Mocha = require('mocha');
+    var prepare = require('..');
+    var sinon = require('sinon');
+    var sandbox;
 
-function assertPrep() {
-    var prepared = global.prep.prepared;
-    var startAt = global.prep.startAt;
-    var endAt = global.prep.endAt;
-    var DELAY_MIN = global.prep.DELAY - global.prep.MARGIN;
-    var DELAY_MAX = global.prep.DELAY + global.prep.MARGIN;
-    assert.ok(prepared);
-    assert.equal(typeof startAt, 'number');
-    assert.equal(typeof endAt, 'number');
-    assert.ok(startAt < endAt);
-    assert.ok(endAt - startAt > DELAY_MIN);
-    assert.ok(endAt - startAt < DELAY_MAX);
-    assert.ok(endAt < Date.now());
-}
+    before(function () {
+        sandbox = sinon.sandbox.create();
+    });
 
-before(function () {
-    assertPrep();
-});
+    afterEach(function () {
+        sandbox.restore();
+    });
 
-after(function () {
-    console.log('GLOBAL AFTER');
-});
+    it('Successful onPrepare and onUnprepare', function (done) {
+        var prepCalled = false;
+        var unprepCalled = false;
+        var stubRun = sandbox.stub(Mocha.prototype, 'run').callsFake(function (fn) {
+            fn();
+        });
 
-describe('mocha-prepare tests', function () {
-    it('should be prepared by now', function () {
-        assertPrep();
+        prepare(function (donePrep) {
+            prepCalled = true;
+            donePrep();
+        }, function (doneUnprep) {
+            unprepCalled = true;
+            doneUnprep();
+        });
+
+        var mocha = new Mocha();
+        mocha.run(function () {
+            assert.ok(stubRun.calledOnce);
+            assert.ok(prepCalled);
+            assert.ok(unprepCalled);
+            done();
+        });
+    });
+
+    it('onPrepare only should succeed', function (done) {
+        var prepCalled = false;
+        var stubRun = sandbox.stub(Mocha.prototype, 'run').callsFake(function (fn) {
+            fn();
+        });
+
+        prepare(function (donePrep) {
+            prepCalled = true;
+            donePrep();
+        });
+
+        var mocha = new Mocha();
+        mocha.run(function () {
+            assert.ok(stubRun.calledOnce);
+            assert.ok(prepCalled);
+            done();
+        });
+    });
+
+    it('onPrepare failure with Error object', function (done) {
+        var spyPrep = sinon.spy();;
+        var unprepCalled = false;
+        var stubRun = sandbox.stub(Mocha.prototype, 'run').callsFake(function (fn) {
+            fn();
+        });
+        var stubExit = sandbox.stub(process, 'exit');
+
+        prepare(function (donePrep) {
+            donePrep(new Error('fake error'));
+        }, function (doneUnprep) {
+            unprepCalled = true;
+            doneUnprep();
+        });
+
+        var mocha = new Mocha();
+        mocha.run(function () {
+            assert.equal(stubRun.callCount, 0);
+            assert.ok(!unprepCalled);
+            assert.ok(stubExit.calledOnce);
+            done();
+        });
+    });
+
+    it('onPrepare failure with non-Error oject', function (done) {
+        var spyPrep = sinon.spy();;
+        var unprepCalled = false;
+        var stubRun = sandbox.stub(Mocha.prototype, 'run').callsFake(function (fn) {
+            fn();
+        });
+        var stubExit = sandbox.stub(process, 'exit');
+
+        prepare(function (donePrep) {
+            donePrep('fake error');
+        }, function (doneUnprep) {
+            unprepCalled = true;
+            doneUnprep();
+        });
+
+        var mocha = new Mocha();
+        mocha.run(function () {
+            assert.equal(stubRun.callCount, 0);
+            assert.ok(!unprepCalled);
+            assert.ok(stubExit.calledOnce);
+            assert.equal(stubExit.args[0], 1);
+            done();
+        });
     });
 });
 

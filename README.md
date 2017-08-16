@@ -97,9 +97,31 @@ require('mocha-prepare') returns a function that takes `onPrepare` and
 ```
 module(onPrepare [, onUnprepare])
 ```
-Each handlers takes an argument `done` (with no argument) which will
+Each handlers takes an argument `done` which will be
 used in your handlers to tell the module that onPrepare/onUnprepare
 has been complete and ready to move on.
+
+The onPrepare handler's callback (done) may optionally take one argument
+(err) to indicate the preparation was failed, in which case, the process
+will exit immediately with exit code 1. If the value passed to `done` is
+an instance of Error, it will print the error stack.
+
+```js
+var prepare = require('mocha-prepare');
+
+prepare(function (done) {
+    // called before loading of test cases
+    someAyncOp(function (err) {
+        if (err) {
+            done(err);
+            return;
+        }
+        :
+        done();
+    });
+});
+```
+> The onUnprepare handler's callback does not take any argument.
 
 ## Note
 * 'mocha' is specified as its `peerDepenencies`. Make sure to have mocha in your devDependencies.
