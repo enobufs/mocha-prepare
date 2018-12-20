@@ -17,7 +17,7 @@ function prepare(onPrepare, onUnprepare) {
                 done(); // unreachable. test purpose only.
             } else {
                 // Call the actual run().
-                run.call(self, function () {
+                run.call(self, function (exitcode) {
                     // All test complete with a result code.
                     // Pass forward the arugments for possible spec change
                     // in the future.
@@ -26,10 +26,14 @@ function prepare(onPrepare, onUnprepare) {
                     if (typeof onUnprepare === 'function') {
                         // onUnprepare() is supplied. Call it.
                         var args = arguments;
-                        onUnprepare(function () {
+                        onUnprepare(function (err) {
+                            if (err instanceof Error) {
+                                console.error(err.stack);
+                                process.exit(1);
+                            }
                             // Done.
                             done.apply(thisArg, args);
-                        });
+                        }, exitcode);
                     } else {
                         // Done.
                         done.apply(thisArg, arguments);
