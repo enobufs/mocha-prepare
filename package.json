@@ -1,5 +1,5 @@
 {
-  "name": "mocha-prepare",
+  "name": "@krisdages/mocha-prepare",
   "version": "0.2.0",
   "description": "Add prepare/unprepare async hooks to your Mocha test environment.",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/enobufs/mocha-prepare.git"
+    "url": "https://github.com/krisdages/mocha-prepare.git"
   },
   "keywords": [
     "mocha",
