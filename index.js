@@ -29,14 +29,14 @@ function prepare(onPrepare, onUnprepare) {
                         onUnprepare(function () {
                             // Done.
                             done.apply(thisArg, args);
-                        });
+                        }, self);
                     } else {
                         // Done.
                         done.apply(thisArg, arguments);
                     }
                 });
             }
-        });
+        }, self);
     };
 }
 

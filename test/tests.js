@@ -83,7 +83,7 @@ describe('mocha-prepare unit test', function () {
         });
     });
 
-    it('onPrepare failure with non-Error oject', function (done) {
+    it('onPrepare failure with non-Error object', function (done) {
         var spyPrep = sinon.spy();;
         var unprepCalled = false;
         var stubRun = sandbox.stub(Mocha.prototype, 'run').callsFake(function (fn) {
@@ -104,6 +104,30 @@ describe('mocha-prepare unit test', function () {
             assert.ok(!unprepCalled);
             assert.ok(stubExit.calledOnce);
             assert.equal(stubExit.args[0], 1);
+            done();
+        });
+    });
+
+    it('onPrepare takes mocha instance as second argument', function (done) {
+        var secondPrepareArgIsMocha = false;
+        var secondUnprepareArgIsMocha = false;
+
+        var mocha = new Mocha();
+
+        prepare(
+            function (donePrep, mochaInstance) {
+                secondPrepareArgIsMocha = mochaInstance === mocha;
+                donePrep();
+            },
+            function (donePrep, mochaInstance) {
+                secondUnprepareArgIsMocha = mochaInstance === mocha;
+                donePrep();
+            }
+        );
+
+        mocha.run(function () {
+            assert.ok(secondPrepareArgIsMocha);
+            assert.ok(secondUnprepareArgIsMocha);
             done();
         });
     });
